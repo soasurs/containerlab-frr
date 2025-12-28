@@ -6,7 +6,7 @@ topology:
       kind: linux
       image: quay.io/frrouting/frr:10.5.0
       binds:
-        - pek1/daemons:/etc/frr/daemons
+        - daemons:/etc/frr/daemons
         - pek1/frr.conf:/etc/frr/frr.conf
       exec:
         - ip link add dummy0 type dummy
@@ -15,7 +15,7 @@ topology:
       kind: linux
       image: quay.io/frrouting/frr:10.5.0
       binds:
-        - sha1/daemons:/etc/frr/daemons
+        - daemons:/etc/frr/daemons
         - sha1/frr.conf:/etc/frr/frr.conf
       exec:
         - ip link add dummy0 type dummy
@@ -24,7 +24,7 @@ topology:
       kind: linux
       image: quay.io/frrouting/frr:10.5.0
       binds:
-        - can1/daemons:/etc/frr/daemons
+        - daemons:/etc/frr/daemons
         - can1/frr.conf:/etc/frr/frr.conf
       exec:
         - ip link add dummy0 type dummy
@@ -33,25 +33,25 @@ topology:
       kind: linux
       image: quay.io/frrouting/frr:10.5.0
       binds:
-        - pekrr/daemons:/etc/frr/daemons
+        - daemons:/etc/frr/daemons
         - pekrr/frr.conf:/etc/frr/frr.conf
     sharr:
       kind: linux
       image: quay.io/frrouting/frr:10.5.0
       binds:
-        - sharr/daemons:/etc/frr/daemons
+        - daemons:/etc/frr/daemons
         - sharr/frr.conf:/etc/frr/frr.conf
     canrr:
       kind: linux
       image: quay.io/frrouting/frr:10.5.0
       binds:
-        - canrr/daemons:/etc/frr/daemons
+        - daemons:/etc/frr/daemons
         - canrr/frr.conf:/etc/frr/frr.conf
     pek2:
       kind: linux
       image: quay.io/frrouting/frr:10.5.0
       binds:
-        - pek2/daemons:/etc/frr/daemons
+        - daemons:/etc/frr/daemons
         - pek2/frr.conf:/etc/frr/frr.conf
       exec:
         - ip link add dummy0 type dummy
@@ -60,7 +60,7 @@ topology:
       kind: linux
       image: quay.io/frrouting/frr:10.5.0
       binds:
-        - sha2/daemons:/etc/frr/daemons
+        - daemons:/etc/frr/daemons
         - sha2/frr.conf:/etc/frr/frr.conf
       exec:
         - ip link add dummy0 type dummy
@@ -69,7 +69,7 @@ topology:
       kind: linux
       image: quay.io/frrouting/frr:10.5.0
       binds:
-        - can2/daemons:/etc/frr/daemons
+        - daemons:/etc/frr/daemons
         - can2/frr.conf:/etc/frr/frr.conf
       exec:
         - ip link add dummy0 type dummy
@@ -78,7 +78,8 @@ topology:
       kind: linux
       image: quay.io/frrouting/frr:10.5.0
       binds:
-        - cust1/daemons:/etc/frr/daemons
+        - daemons:/etc/frr/daemons
+        - cust1/frr.conf:/etc/frr/frr.conf
       exec:
         - ip link add dummy0 type dummy
         - ip link set dummy0 up
@@ -86,7 +87,8 @@ topology:
       kind: linux
       image: quay.io/frrouting/frr:10.5.0
       binds:
-        - cust2/daemons:/etc/frr/daemons
+        - daemons:/etc/frr/daemons
+        - cust2/frr.conf:/etc/frr/frr.conf
       exec:
         - ip link add dummy0 type dummy
         - ip link set dummy0 up
