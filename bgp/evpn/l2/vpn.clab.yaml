@@ -1,0 +1,84 @@
+name: vpn
+
+topology:
+  nodes:
+    leaf1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons
+        - leaf1/frr.conf:/etc/frr/frr.conf
+        - setup_vxlan.sh:/tmp/setup_vxlan.sh:ro
+      exec:
+        - bash /tmp/setup_vxlan.sh 10.0.0.1
+    leaf2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons
+        - leaf2/frr.conf:/etc/frr/frr.conf
+        - setup_vxlan.sh:/tmp/setup_vxlan.sh:ro
+      exec:
+        - bash /tmp/setup_vxlan.sh 10.0.0.2
+    leaf3:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons
+        - leaf3/frr.conf:/etc/frr/frr.conf
+        - setup_vxlan.sh:/tmp/setup_vxlan.sh:ro
+      exec:
+        - bash /tmp/setup_vxlan.sh 10.0.0.3
+    spine1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons
+        - spine1/frr.conf:/etc/frr/frr.conf
+    spine2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons
+        - spine2/frr.conf:/etc/frr/frr.conf
+    host1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - setup_host.sh:/tmp/setup_host.sh:ro
+      exec:
+        - bash /tmp/setup_host.sh 192.168.10.2
+    host2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - setup_host.sh:/tmp/setup_host.sh:ro
+      exec:
+        - bash /tmp/setup_host.sh 192.168.10.3
+    host3:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - setup_host.sh:/tmp/setup_host.sh:ro
+      exec:
+        - bash /tmp/setup_host.sh 192.168.10.4
+
+  links:
+    - endpoints: ["leaf1:eth1", "spine1:eth1"]
+      mtu: 9500
+    - endpoints: ["leaf1:eth2", "spine2:eth1"]
+      mtu: 9500
+    - endpoints: ["leaf2:eth1", "spine1:eth2"]
+      mtu: 9500
+    - endpoints: ["leaf2:eth2", "spine2:eth2"]
+      mtu: 9500
+    - endpoints: ["leaf3:eth1", "spine1:eth3"]
+      mtu: 9500
+    - endpoints: ["leaf3:eth2", "spine2:eth3"]
+      mtu: 9500
+    - endpoints: ["host1:eth1", "leaf1:eth3"]
+      mtu: 1500
+    - endpoints: ["host2:eth1", "leaf2:eth3"]
+      mtu: 1500
+    - endpoints: ["host3:eth1", "leaf3:eth3"]
+      mtu: 1500
