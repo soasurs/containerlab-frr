@@ -1,0 +1,51 @@
+name: mpls
+
+topology:
+  nodes:
+    pe1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons
+        - pe1/frr.conf:/etc/frr/frr.conf
+      exec:
+        - sysctl -w net.mpls.conf.eth1.input=1 
+    p1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons
+        - p1/frr.conf:/etc/frr/frr.conf
+      exec:
+        - sysctl -w net.mpls.conf.eth1.input=1
+        - sysctl -w net.mpls.conf.eth2.input=1
+        - sysctl -w net.mpls.platform_labels=100000
+    pe2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons
+        - pe2/frr.conf:/etc/frr/frr.conf
+      exec:
+        - sysctl -w net.mpls.conf.eth1.input=1
+    ce1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons
+        - ce1/frr.conf:/etc/frr/frr.conf
+    ce2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons
+        - ce2/frr.conf:/etc/frr/frr.conf
+  links:
+    - endpoints: ["pe1:eth1", "p1:eth1"]
+      mtu: 9000
+    - endpoints: ["p1:eth2", "pe2:eth1"]
+      mtu: 9000
+    - endpoints: ["ce1:eth1", "pe1:eth2"]
+      mtu: 1500
+    - endpoints: ["ce2:eth1", "pe2:eth2"]
+      mtu: 1500
