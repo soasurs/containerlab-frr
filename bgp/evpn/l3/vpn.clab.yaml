@@ -1,0 +1,71 @@
+name: vpn
+
+topology:
+  nodes:
+    ce1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons:ro
+        - ce1/frr.conf:/etc/frr/frr.conf:ro
+      exec:
+        - ip link add dummy0 type dummy
+        - ip link set dummy0 up
+    ce2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons:ro
+        - ce2/frr.conf:/etc/frr/frr.conf:ro
+      exec:
+        - ip link add dummy0 type dummy
+        - ip link set dummy0 up
+    pe1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons:ro
+        - pe1/frr.conf:/etc/frr/frr.conf:ro
+      exec:
+        - ip link add cust type vrf table 4096
+        - ip link set cust up
+        - ip link add br10 type bridge
+        - ip link set br10 master cust
+        - ip link set br10 up
+        - ip link add vni10 type vxlan local 192.168.0.2 dstport 4789 id 10 nolearning
+        - ip link set vni10 master br10
+        - ip link set vni10 up
+        - ip link set eth1 master cust
+    pe2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons:ro
+        - pe2/frr.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add cust type vrf table 4096
+        - ip link set cust up
+        - ip link add br10 type bridge
+        - ip link set br10 master cust
+        - ip link set br10 up
+        - ip link add vni10 type vxlan local 192.168.0.3 dstport 4789 id 10 nolearning
+        - ip link set vni10 master br10
+        - ip link set vni10 up
+        - ip link set eth2 master cust
+    p1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - daemons:/etc/frr/daemons:ro
+        - p1/frr.conf:/etc/frr/frr.conf:ro
+  links:
+    - endpoints: ["ce1:eth1", "pe1:eth1"]
+      mtu: 1500
+    - endpoints: ["pe1:eth2", "p1:eth1"]
+      mtu: 9000
+    - endpoints: ["p1:eth2", "pe2:eth1"]
+      mtu: 9000
+    - endpoints: ["pe2:eth2", "ce2:eth1"]
+      mtu: 1500
+    - endpoints: ["pe1:eth3", "pe2:eth3"]
+      mtu: 9000
