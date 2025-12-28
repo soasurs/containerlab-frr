@@ -1,0 +1,127 @@
+name: backbone
+
+topology:
+  nodes:
+    pek1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - pek1/daemons:/etc/frr/daemons
+        - pek1/frr.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add dummy0 type dummy
+        - ip link set dummy0 up
+    sha1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - sha1/daemons:/etc/frr/daemons
+        - sha1/frr.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add dummy0 type dummy
+        - ip link set dummy0 up
+    can1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - can1/daemons:/etc/frr/daemons
+        - can1/frr.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add dummy0 type dummy
+        - ip link set dummy0 up
+    pekrr:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - pekrr/daemons:/etc/frr/daemons
+        - pekrr/frr.conf:/etc/frr/frr.conf
+    sharr:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - sharr/daemons:/etc/frr/daemons
+        - sharr/frr.conf:/etc/frr/frr.conf
+    canrr:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - canrr/daemons:/etc/frr/daemons
+        - canrr/frr.conf:/etc/frr/frr.conf
+    pek2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - pek2/daemons:/etc/frr/daemons
+        - pek2/frr.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add dummy0 type dummy
+        - ip link set dummy0 up
+    sha2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - sha2/daemons:/etc/frr/daemons
+        - sha2/frr.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add dummy0 type dummy
+        - ip link set dummy0 up
+    can2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - can2/daemons:/etc/frr/daemons
+        - can2/frr.conf:/etc/frr/frr.conf
+      exec:
+        - ip link add dummy0 type dummy
+        - ip link set dummy0 up
+    cust1:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - cust1/daemons:/etc/frr/daemons
+      exec:
+        - ip link add dummy0 type dummy
+        - ip link set dummy0 up
+    cust2:
+      kind: linux
+      image: quay.io/frrouting/frr:10.5.0
+      binds:
+        - cust2/daemons:/etc/frr/daemons
+      exec:
+        - ip link add dummy0 type dummy
+        - ip link set dummy0 up
+  links:
+    - endpoints: ["pek1:eth1", "sha1:eth1"]
+      mtu: 9000
+    - endpoints: ["sha1:eth2", "can1:eth1"]
+      mtu: 9000
+    - endpoints: ["can1:eth2", "pek1:eth2"]
+      mtu: 9000
+    - endpoints: ["pekrr:eth1", "sharr:eth1"]
+      mtu: 9000
+    - endpoints: ["sharr:eth2", "canrr:eth1"]
+      mtu: 9000
+    - endpoints: ["canrr:eth2", "pekrr:eth2"]
+      mtu: 9000
+    - endpoints: ["pek1:eth3", "pekrr:eth3"]
+      mtu: 9000
+    - endpoints: ["sha1:eth3", "sharr:eth3"]
+      mtu: 9000
+    - endpoints: ["can1:eth3", "canrr:eth3"]
+      mtu: 9000
+    - endpoints: ["pek2:eth1", "pek1:eth4"]
+      mtu: 9000
+    - endpoints: ["pek2:eth2", "pekrr:eth4"]
+      mtu: 9000
+    - endpoints: ["sha2:eth1", "sha1:eth4"]
+      mtu: 9000
+    - endpoints: ["sha2:eth2", "sharr:eth4"]
+      mtu: 9000
+    - endpoints: ["can2:eth1", "can1:eth4"]
+      mtu: 9000
+    - endpoints: ["can2:eth2", "canrr:eth4"]
+      mtu: 9000
+    - endpoints: ["cust1:eth1", "sha2:eth3"]
+      mtu: 1500
+    - endpoints: ["cust2:eth1", "can2:eth3"]
+      mtu: 1500
